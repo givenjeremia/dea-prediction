@@ -9,9 +9,7 @@ from tensorflow.keras.applications.xception import preprocess_input  # type: ign
 from .models import DataModels
 
 # Load the model globally when the server starts
-database = DataModels.objects.last()
 
-model = tf.keras.models.load_model(database.file.url)
 
 def loadModelPrediction(request):
     if request.method == 'POST' and request.FILES.get('image_file'):
@@ -19,6 +17,9 @@ def loadModelPrediction(request):
         image_file = request.FILES['image_file']
 
         try:
+            database = DataModels.objects.last()
+
+            model = tf.keras.models.load_model(database.file.url)   
             # Open the image using Pillow
             img = Image.open(image_file)
             
