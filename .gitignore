@@ -1,0 +1,7 @@
+/config/__pycache__
+.env
+media/uploads/
+__pycache__/
+media/
+.venv/
+
