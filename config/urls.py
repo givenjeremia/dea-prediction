@@ -27,7 +27,7 @@ from django.contrib.staticfiles import views
 urlpatterns = [
     path("governor/", admin.site.urls),
 
-    # path("", include('prediction.urls')),
+    path("", include('prediction.urls')),
 
     re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
