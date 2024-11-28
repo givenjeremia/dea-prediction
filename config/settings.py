@@ -77,9 +77,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "upt.context_processors.serviceApp",
-                "upp.context_processors.serviceUPP",
-                "landing.context_processors.serviceDefault"
             ],
         },
     },
