@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'management.middleware.MethodOverrideMiddleware',
+    # 'management.middleware.MethodOverrideMiddleware',
     'users.middleware.UserMiddleware',
 ]
 
