@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def loadModelPrediction(request):
-    if request.method == 'POST' and request.FILES.get('image_file'):
+    if request.method == 'POST':
         # Get the uploaded image file
         image_file = request.FILES['image_file']
 
