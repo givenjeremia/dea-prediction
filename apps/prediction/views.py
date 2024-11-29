@@ -1,54 +1,57 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import status
 import tensorflow as tf
 import numpy as np
-from django.http import JsonResponse
 from PIL import Image
-from tensorflow.keras.preprocessing.image import img_to_array # type: ignore
+from tensorflow.keras.preprocessing.image import img_to_array  # type: ignore
 from tensorflow.keras.applications.xception import preprocess_input  # type: ignore # Xception's preprocessing
 
 from .models import DataModels
 
-# Load the model globally when the server starts
+class LoadModelPredictionView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
 
-from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt
-def loadModelPrediction(request):
-    image_file = request.FILES['image_file']
-
-    try:
-        database = DataModels.objects.last()
-
-        model = tf.keras.models.load_model(database.file.url)   
-        # Open the image using Pillow
-        img = Image.open(image_file)
+    def post(self, request, *args, **kwargs):
+        print(request)
+        if 'image' not in request.FILES:
+            return Response({'error': 'Image file is required'}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Preprocess the image (resize and normalize)
-        img = img.resize((224, 224))  # Resize to the input size of the model
-        img = img_to_array(img)  # Convert to numpy array (from PIL image)
-        
-        # Apply Xception-specific preprocessing
-        img = preprocess_input(img)  # Preprocess image as required by Xception
+        image_file = request.FILES['image']
 
-        # Add batch dimension
-        img = np.expand_dims(img, axis=0)  # Shape should be (1, 224, 224, 3)
-        
-        # Make the prediction
-        prediction = model.predict(img)
-        
-        # Convert the prediction to class label
-        predicted_class = np.argmax(prediction, axis=1)[0]  # If model is classification
-        confidence = np.max(prediction)  # Get the confidence score
-        
-        # Return the prediction as a JSON response
-        return JsonResponse({
-        'predicted_class': int(predicted_class),
-        'confidence': float(confidence)
-        })
+        try:
+            # Fetch the latest model from the database
+            database = DataModels.objects.last()
+            if not database or not database.file:
+                return Response({'error': 'No model found in the database'}, status=status.HTTP_404_NOT_FOUND)
 
-    except Exception as e:
-        return JsonResponse({
-        'error': str(e)
-        }, status=400)
+            model = tf.keras.models.load_model(database.file.path)  # Load the model file
 
+            # Process the uploaded image
+            img = Image.open(image_file)
+            if img.mode != 'RGB':
+                img = img.convert('RGB') 
 
+            img = img.resize((224, 224))
+            img = img_to_array(img)
+            img = preprocess_input(img)
+            img = np.expand_dims(img, axis=0)
+
+            # Make predictions
+            prediction = model.predict(img)
+            print(prediction)
+            predicted_class = np.argmax(prediction, axis=1)[0]  # Class index
+            print(np.argmax(prediction, axis=1))
+            class_indices = {0: 'Agrotis Sp', 1: 'Phenacoccus Manihoti', 2: 'Plutella Xylostella', 3: 'Spodoptera Litura'}  # Modify with your actual class indices
+            predicted_class_name = class_indices[predicted_class] 
+            confidence = np.max(prediction)  # Confidence score
+
+            return Response({
+                'predicted_class': int(predicted_class),
+                'class_name': str(predicted_class_name),
+                'confidence': float(confidence)
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

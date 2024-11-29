@@ -4,5 +4,5 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
-    path('predict/', views.loadModelPrediction, name='loadModelPrediction'),
+    path('predict/', views.LoadModelPredictionView.as_view(), name='loadModelPrediction'),
 ]
