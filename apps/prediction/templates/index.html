@@ -12,7 +12,6 @@
     <div class="container justify-content-center align-content-center text-center " style="margin-top:20px;">
         <h1>Image Classification Xception</h1>
         <form id="image-upload-form" enctype="multipart/form-data">
-            {% csrf_token %}
             <input type="file" id="image" name="image"onchange="loadFileLogo(event)">
             <br>
             <br>
@@ -69,7 +68,7 @@
     
     
                 $.ajax({
-    
+                    headers: { "X-CSRFToken": '{{csrf_token}}' },
                     url: '{% url "loadModelPrediction" %}', 
     
                     type: 'POST',
