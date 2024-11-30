@@ -10,6 +10,14 @@ from tensorflow.keras.applications.xception import preprocess_input  # type: ign
 
 from .models import DataModels
 
+from django.shortcuts import render
+
+
+def index(request):
+    return render(request, 'index.html',{})
+
+
+
 class LoadModelPredictionView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
