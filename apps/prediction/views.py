@@ -16,7 +16,43 @@ from django.shortcuts import render
 def index(request):
     return render(request, 'index.html',{})
 
+hama_data = {
+    0: {
+        "nama_hama": "Hama Perusak Daun (Plutella Xylostella)",
+        "penanganan": [
+            "Gunakan insektisida berbahan aktif abamektin, klorantraniliprol, atau spinosad.",
+            "Semprotkan secara selektif untuk mencegah resistensi."
+        ]
+    },
+    1: {
+        "nama_hama": "Ulat Tanah (Agrotis sp.)",
+        "penanganan": [
+            "Gunakan insektisida berbahan aktif klorpirifos atau karbofuran di sekitar area pangkal tanaman.",
+            "Bersihkan gulma dan sisa tanaman yang dapat menjadi tempat berkembangnya hama."
+        ]
+    },
+    2: {
+        "nama_hama": "Ulat Grayak (Spodoptera litura)",
+        "penanganan": [
+            "Gunakan insektisida berbahan aktif emamektin benzoat, deltametrin, atau lambda-sihalotrin.",
+            "Pastikan tanaman mendapatkan nutrisi yang cukup agar lebih tahan terhadap serangan hama."
+        ]
+    },
+    3: {
+        "nama_hama": "Hama Kutu Putih (Phenacoccus manihoti)",
+        "penanganan": [
+            "Gunakan insektisida berbahan aktif imidakloprid, asetamiprid, atau dimetoat.",
+            "Semprotkan insektisida secara merata di bagian tanaman yang terinfestasi."
+        ]
+    }
+}
 
+def tampilkan_penanganan(id_deteksi):
+    if id_deteksi in hama_data:
+        hama = hama_data[id_deteksi]
+        return hama["penanganan"]
+    else:
+        return {"error": "ID deteksi tidak ditemukan. Pastikan ID valid (0, 1, 2, dst.)."}
 
 class LoadModelPredictionView(APIView):
     parser_classes = [MultiPartParser, FormParser]
@@ -55,10 +91,13 @@ class LoadModelPredictionView(APIView):
             predicted_class_name = class_indices[predicted_class] 
             confidence = np.max(prediction)  # Confidence score
 
+            penanganan =  tampilkan_penanganan(predicted_class)
+
             return Response({
                 'predicted_class': int(predicted_class),
                 'class_name': str(predicted_class_name),
-                'confidence': float(confidence)
+                'confidence': float(confidence),
+                'penanganan': penanganan
             }, status=status.HTTP_200_OK)
 
         except Exception as e:
