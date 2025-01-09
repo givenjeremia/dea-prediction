@@ -91,9 +91,11 @@
                             html: `
                                 Class Name: ${className}<br>
                                 Confidence: ${confidence}<br>
-                                Penanganan: ${penanganan.join('<br>')}
+                                Penanganan:<br><br>
+                                ${penanganan.map((step, index) => `${index + 1}. ${step}<br><br>`).join('')}
                             `,
                         });
+                        
                         
     
                         // Optionally, handle the response here
