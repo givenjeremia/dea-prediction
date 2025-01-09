@@ -91,10 +91,10 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", "ppid_python"),
-        'USER': os.environ.get("DB_USER", 'root'),
-        'PASSWORD': os.environ.get("DB_PASSWORD", 'root'),
-        'HOST': os.environ.get("DB_HOST", '127.0.0.1'),
+        "NAME": os.environ.get("DB_NAME", "dea_prediction"),
+        'USER': os.environ.get("DB_USER", 'postgres'),
+        'PASSWORD': os.environ.get("DB_PASSWORD", 'r4h4514'),
+        'HOST': os.environ.get("DB_HOST", '103.157.96.216'),
         'PORT': os.environ.get("DB_PORT", '5432'),
     }
 }
@@ -175,52 +175,9 @@ LOGIN_URL = '/manage/login/'
 # handler500 = 'upt.views.custom_404_view'
 
 
-#EMAIL
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'mail.kkp.go.id'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER','ppidkkp@kkp.go.id')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD','PAGIppid@191044')
-DEFAULT_FROM_EMAIL = 'ppidkkp@kkp.go.id'
-
-# email : ppidkkp@kkp.go.id
-# pass : PAGIppid@191044
-
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 104857600
 
-PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static', 'serviceworker.js')
-
-PWA_APP_NAME = 'PPID APPS'
-PWA_APP_DESCRIPTION = "Permohonan Informasi Public"
-PWA_APP_THEME_COLOR = '#0A0302'
-PWA_APP_BACKGROUND_COLOR = '#ffffff'
-PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = '/'
-PWA_APP_ORIENTATION = 'any'
-PWA_APP_START_URL = '/'
-PWA_APP_STATUS_BAR_COLOR = 'default'
-PWA_APP_ICONS = [
-        {
-        'src': '/static/images/my_app_icon.png',
-        'sizes': '160x160'
-        }
-    ]
-PWA_APP_ICONS_APPLE = [
-        {
-        'src': '/static/images/my_apple_icon.png',
-        'sizes': '160x160'
-        }
-    ]
-PWA_APP_SPLASH_SCREEN = [
-        {
-        'src': '/static/images/icons/splash-640x1136.png',
-        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
-        }
-    ]
-PWA_APP_DIR = 'ltr'
-PWA_APP_LANG = 'en-US'
 
 
